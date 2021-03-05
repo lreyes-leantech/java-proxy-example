@@ -1,6 +1,5 @@
 package com.stream.consumer;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,28 +44,25 @@ public class InputStreamConsumer implements Runnable {
 						break;
 					}
 				} catch (IOException e) {
+					System.err.println("Error reading buffer " + e.getMessage());
 				}
 
 				try {
 					this.output.write(bytesBuffer, 0, bytesReaded);
 					this.output.flush();
 				} catch (Exception e) {
+					System.err.println("Error writing consume " + e.getMessage());
 				}
-				
+
 				this.timerRead.schedule(this.readTimeOut);
 
-				try {
-					while (!(this.input.available() > 0) && !this.timerRead.isTimeout()) {
-						try {
-							Thread.sleep(1);
-						} catch (Exception e) {
-						}
-					}
-					availableBytes = this.input.available() > 0;
-				} catch (IOException e) {
+				while (!(this.input.available() > 0) && !this.timerRead.isTimeout()) {
+					Thread.sleep(1);
 				}
+				availableBytes = this.input.available() > 0;
 			} while (availableBytes);
-		} finally {
+		} catch (Exception e) {
+			System.err.println("Error consume " + e.getMessage());
 		}
 	}
 

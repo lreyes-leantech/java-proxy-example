@@ -50,7 +50,8 @@ public class Proxy implements Runnable {
 		}
 
 		Headers request = new HttpRequestHeaders(new String(httpBytesHeaders.toByteArray()));
-		logHeaders(request.toString().getBytes());
+		logRequestHeaders(request.toString().getBytes());
+		
 		System.out.println("from: " + client.getInetAddress() + " " + request.getRequestMethodEnum() + " "
 				+ request.getHost() + " " + request.getPort());
 
@@ -69,8 +70,8 @@ public class Proxy implements Runnable {
 		}
 
 	}
-	
-	private static void logHeaders(byte[] data) {
+
+	private static void logRequestHeaders(byte[] data) {
 		try {
 			Files.write(path, data, StandardOpenOption.APPEND);
 		} catch (IOException ex) {
